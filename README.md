@@ -1,73 +1,48 @@
-# React + TypeScript + Vite
+# STLmarket Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+3D 프린팅용 STL 파일 마켓플레이스의 프론트엔드입니다.
 
-Currently, two official plugins are available:
+## 기술 스택
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| 분류 | 기술 |
+|------|------|
+| Framework | React 19 |
+| Language | TypeScript |
+| Bundler | Vite |
+| Styling | Tailwind CSS v4 |
+| HTTP | Axios |
+| Routing | React Router DOM |
 
-## React Compiler
+## 주요 기능
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 회원가입 / 로그인 (JWT 기반)
+- 상품 목록 (카테고리 필터, 키워드 검색)
+- 상품 상세 페이지 및 파일 다운로드
+- STL 파일 등록 (판매자 전용)
+- 로그인/비로그인 상태에 따른 접근 제어
 
-## Expanding the ESLint configuration
+## 실행 방법
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+**사전 조건:** Node.js 18+, [stlmarket-backend](https://github.com/yjdev101/stlmarket-backend) 실행 중
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+백엔드가 `localhost:8080`에서 실행 중이어야 합니다.  
+프론트엔드는 `http://localhost:5173`에서 접속 가능합니다.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 페이지 구성
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| 경로 | 설명 | 접근 |
+|------|------|------|
+| `/` | 상품 목록 (홈) | 전체 |
+| `/login` | 로그인 | 비로그인 |
+| `/signup` | 회원가입 | 비로그인 |
+| `/products/:id` | 상품 상세 | 전체 |
+| `/upload` | 파일 등록 | 판매자 |
+
+## 관련 레포지토리
+
+- Backend: [stlmarket-backend](https://github.com/yjdev101/stlmarket-backend)
