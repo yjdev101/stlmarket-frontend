@@ -10,11 +10,12 @@ STL 파일(3D 프린팅) 마켓플레이스의 React 프론트엔드.
 - Tailwind CSS v4 (@tailwindcss/vite)
 - axios (API 통신)
 - react-router-dom (라우팅)
+- @tosspayments/tosspayments-sdk (결제)
 
 ## 실행 방법
 
 ```powershell
-cd C:\Users\Administrator\IdeaProjects\stlmarket-frontend
+cd C:\Users\yjdev101\STLmart\stlmarket-frontend
 npm run dev   # http://localhost:5173
 ```
 
@@ -35,7 +36,9 @@ src/
 │   ├── ProductDetailPage.tsx  # 상품 상세
 │   ├── LoginPage.tsx       # 로그인
 │   ├── SignupPage.tsx       # 회원가입
-│   └── UploadPage.tsx      # 상품 업로드 (판매자용)
+│   ├── UploadPage.tsx      # 상품 업로드 (판매자용)
+│   ├── PaymentSuccessPage.tsx  # 토스페이먼츠 결제 성공 콜백 (/payment/success)
+│   └── PaymentFailPage.tsx     # 토스페이먼츠 결제 실패 콜백 (/payment/fail)
 └── components/
     ├── Navbar.tsx           # 상단 네비게이션
     └── ProductCard.tsx      # 상품 카드 컴포넌트
@@ -46,4 +49,4 @@ src/
 - JWT는 localStorage에 저장 (`token` 키)
 - API 호출은 `src/api/axios.ts` 인스턴스만 사용
 - 페이지 컴포넌트는 `src/pages/`, 재사용 컴포넌트는 `src/components/`
-- npm strict-ssl=false 설정됨 (피씨방 네트워크 환경)
+- 토스페이먼츠 클라이언트 키는 `ProductDetailPage.tsx`의 `TOSS_CLIENT_KEY` 상수에 설정 (개발자센터에서 발급)

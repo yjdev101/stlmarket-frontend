@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { ANONYMOUS, loadTossPayments } from '@tosspayments/tosspayments-sdk'
 import api from '../api/axios'
 import { useAuth } from '../context/AuthContext'
+
+const TOSS_CLIENT_KEY = 'test_ck_4yKeq5bgrpLankKRbXx4rGX0lzW6'
 
 export default function ProductDetailPage() {
   const { id } = useParams()
@@ -32,6 +35,30 @@ export default function ProductDetailPage() {
       link.remove()
     } catch (err: any) {
       alert(err.response?.data?.message || '다운로드에 실패했습니다.')
+    }
+  }
+
+  const handlePurchase = async () => {
+    if (!user) {
+      navigate('/login')
+      return
+    }
+    try {
+      const { data: order } = await api.post('/orders', { productId: Number(id) })
+      const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY)
+      const payment = tossPayments.payment({ customerKey: ANONYMOUS })
+      await payment.requestPayment({
+        method: 'CARD',
+        amount: { currency: 'KRW', value: Number(order.amount) },
+        orderId: order.tossOrderId,
+        orderName: order.orderName,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        successUrl: `${window.location.origin}/payment/success`,
+        failUrl: `${window.location.origin}/payment/fail`,
+      })
+    } catch (err: any) {
+      alert(err.response?.data?.message || '결제 요청에 실패했습니다.')
     }
   }
 
@@ -72,23 +99,20 @@ export default function ProductDetailPage() {
             <span className="text-2xl font-bold text-indigo-600">
               {Number(product.price) === 0 ? '무료' : `${Number(product.price).toLocaleString()}원`}
             </span>
-            {Number(product.price) === 0 ? (
+            {Number(product.price) === 0 || product.hasPurchased ? (
               <button
                 onClick={handleDownload}
                 className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
               >
-                무료 다운로드
+                {Number(product.price) === 0 ? '무료 다운로드' : '다운로드'}
               </button>
             ) : (
-              <div className="text-right">
-                <button
-                  disabled
-                  className="bg-gray-200 text-gray-400 px-6 py-2.5 rounded-lg font-medium cursor-not-allowed"
-                >
-                  결제 준비 중
-                </button>
-                <p className="text-xs text-gray-400 mt-1">결제 기능은 곧 추가될 예정입니다.</p>
-              </div>
+              <button
+                onClick={handlePurchase}
+                className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+              >
+                구매하기
+              </button>
             )}
           </div>
         </div>
